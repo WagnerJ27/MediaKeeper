@@ -5,6 +5,7 @@ import java.util.Scanner;
 
 public class Main {
 	
+	//Method to add a new Media entry;
 	public static Media addMedia(String typ, String name) {
 		Media entry = new Media(typ,name);
 		return entry;
