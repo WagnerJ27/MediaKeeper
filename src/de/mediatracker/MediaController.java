@@ -72,26 +72,54 @@ public class MediaController {
 	public void addMediaAction() {
 		System.out.println("\n\n\n");
 		System.out.println("Hinzufügen eines Mediums:");
-		System.out.println("\nBitte geben Sie an ob es sich um ein Spiel, ein Buch, einen Film oder eine Serie handelt");
-		String type = in.nextLine();
-			
-		// Validate the entered media type.
-			while(!type.equals("Filme") && !type.equals("Spiel") && !type.equals("Buch") && !type.equals("Serie")) {
-				System.out.println("Bitte geben Sie einen gültigen Typen für den neuen Eintrag ein.");
-				type = in.nextLine();
-			}
-			
+
+		MediaType type = askForMediaType();	
+		
 		System.out.println("Bitte geben Sie nun den Namen für den Eintrag ein.");
 		String name = in.nextLine();
 		
+		System.out.println("Bitte geben Sie nun das Jahr ein, ich welches das Medium abgeschlossen wurde!");
+		int year = in.nextInt();
+		in.nextLine();
 		// Create and store the new media entry.
-		Media entry = new Media(type,name);
+		Media entry = new Media(type,name,year);
 		allEntries.add(entry);
 		
 		System.out.println("Eintrag wurde angelegt!");
 		System.out.println("\n");
 	}
 
+	private MediaType askForMediaType() {
+	    while (true) {
+
+	        System.out.println("Bitte geben Sie den Medientyp ein:");
+	        System.out.println("Spiel | Buch | Film | Serie");
+
+	        String input = in.nextLine();
+
+	        switch (input.toLowerCase()) {
+
+	            case "spiel":
+	                return MediaType.GAME;
+
+	            case "buch":
+	                return MediaType.BOOK;
+
+	            case "film":
+	                return MediaType.MOVIE;
+
+	            case "serie":
+	                return MediaType.SERIES;
+
+	            default:
+	                System.out.println("Ungültiger Medientyp.");
+	        }
+
+	    }
+
+	}
+	
+	
 	
 	// Removes a media entry from the collection by its name.
 	public void deleteMediaAction() {
@@ -132,7 +160,7 @@ public class MediaController {
 			
 			// Print every stored media entry.
 			for(int i =0;i<allEntries.size();i++) {
-				System.out.println("Name: "+allEntries.get(i).getName() + "| Medium: "+allEntries.get(i).getType());
+				System.out.println("Name: "+allEntries.get(i).getName() + "| Medium: "+allEntries.get(i).getType().getDisplayName()+" | Jahr: "+allEntries.get(i).getYear());
 				continue;
 			}
 		}

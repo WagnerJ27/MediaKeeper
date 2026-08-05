@@ -5,15 +5,18 @@ package de.mediatracker;
 public class Media {
 	
 	// Type of the media (e.g. Book, Movie, Game, Series).	
-	private String typ;
+	private MediaType type;
 	
 	// Name of the media.
 	private String name;
 
+	// Year in which the media was finished
+	private int year;
 	// Creates a new media object with the given type and name.
-	public Media(String typ, String name) {
-		this.typ = typ;
+	public Media(MediaType type, String name, int year) {
+		this.type = type;
 		this.name = name;
+		this.year = year;
 	}
 
 	// Returns the name of the media.
@@ -21,7 +24,10 @@ public class Media {
 		return name;
 	}
 	// Returns the media type.
-	public String getType() {
-		return typ;
+	public MediaType getType() {
+		return type;
+	}
+	public int getYear() {
+		return year;
 	}
 }
