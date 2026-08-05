@@ -13,15 +13,16 @@ public class MediaController {
 	
 	// Stores all created media entries during runtime.
 	private ArrayList<Media> allEntries= new ArrayList<Media>();
-	
+
+	private FileManager fileManager = new FileManager();
 	// Determines whether the application should continue running.
 	private boolean exit = false;
 	
-	
-	
+
 	// Main application loop.
 	// Repeats until the user chooses to exit the program.
 	public void programLoop() {
+		allEntries= fileManager.loadMedia();
 		while(!exit) {
 		int action =mainMenu();
 		
@@ -169,7 +170,10 @@ public class MediaController {
 	// Terminates the application.
 	public void endProgram() {
 		System.out.println("Vielen Dank für die Nutzung von MediaKeeper!");
+		System.out.println("Ihre Änderungen wurden gespeichert");
+		fileManager.saveMedia(allEntries);
 		System.out.println("Bis zum Nächsten Mal!");
+		
 		exit = true;
 	}
 }
