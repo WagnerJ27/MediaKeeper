@@ -24,8 +24,32 @@ public class FileManager {
 	 try(BufferedWriter writer = new BufferedWriter(new FileWriter(OUTPUT_FILE))) {
 		 
 		 for(Media media : allEntries) {
-			 writer.write(media.getType()+";"+media.getName()+";"+media.getYear());
-			 writer.newLine();
+			 String type = media.getClass().getSimpleName();
+			 
+			 switch(type) {
+			 	case "Game":
+			 		Game game = (Game) media;
+					 writer.write(game.getClass().getSimpleName()+";"+game.getName()+";"+game.getYear()+";" +game.getPlatform()+";"+game.getHundredPercentCompletion());
+					 writer.newLine();
+				 break;
+				 
+			 	case "Book":
+			 		Book book = (Book) media;
+					 writer.write(book.getClass().getSimpleName()+";"+book.getName()+";"+book.getYear()+";"+book.getAuthor());
+					 writer.newLine();
+			 		break;
+			 		
+			 	case "Movie":			 		
+			 	case "Series":
+					 writer.write(media.getClass().getSimpleName()+";"+media.getName()+";"+media.getYear());
+					 writer.newLine();
+			 		break;
+			 	
+			 	default:
+			 	    System.out.println("Unbekannter Medientyp konnte nicht gespeichert werden.");
+			 	    break;
+			 }
+
 		 }
 		 
 
@@ -45,10 +69,36 @@ public class FileManager {
 		try(BufferedReader reader = new BufferedReader(new FileReader(saveFile))){	
 			while((line = reader.readLine())!=null) {
 					String[] parts = line.split(";");
-					MediaType type = MediaType.valueOf(parts[0]);
-					int year = Integer.parseInt(parts[2]);
-					Media obj = new Media(type,parts[1],year);
-					allEntries.add(obj);
+					String type = parts[0];
+					int year;
+					Media obj;
+					 switch(type) {
+					 	case "Game":
+					 		 year = Integer.parseInt(parts[2]);
+					 		boolean completed = Boolean.valueOf(parts[4]);
+					 		obj = new Game(parts[1],year,parts[3],completed);
+					 		break;
+						 	
+					 	case "Book":
+					 		 year = Integer.parseInt(parts[2]);
+					 		 obj = new Book(parts[1],year,parts[3]);
+					 		break;
+					 		
+					 	case "Movie":			 		
+					 		year = Integer.parseInt(parts[2]);
+					 		obj = new Movie(parts[1],year);
+					 		break;
+					 	case "Series":
+					 		year = Integer.parseInt(parts[2]);
+					 		obj = new Series(parts[1],year);
+					 		break;
+					 	
+					 	default:
+					 	    System.out.println("Fehler beim Laden");
+					 	    continue;
+					 }
+					 allEntries.add(obj);
+
 			}
 		}catch(IOException  e) {
 			System.out.println("Laden fehlgeschlagen");

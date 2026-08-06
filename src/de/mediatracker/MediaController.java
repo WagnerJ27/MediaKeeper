@@ -74,23 +74,36 @@ public class MediaController {
 		System.out.println("\n\n\n");
 		System.out.println("Hinzufügen eines Mediums:");
 
-		MediaType type = askForMediaType();	
+		Media entry;
+		String inputType = askForMediaType();
+			switch(inputType) {
+			case "game":
+				entry = addGame();
+				break;
+			case "book":
+				entry = addBook();
+				break;
+			case "movie":
+				entry = addMovie();
+				break;
+			case "series":
+				entry = addSeries();
+				break;
+			default:
+				System.out.println("Ungültiger Medientyp");
+				return;
+			}
 		
-		System.out.println("Bitte geben Sie nun den Namen für den Eintrag ein.");
-		String name = in.nextLine();
-		
-		System.out.println("Bitte geben Sie nun das Jahr ein, ich welches das Medium abgeschlossen wurde!");
-		int year = in.nextInt();
-		in.nextLine();
+
+
 		// Create and store the new media entry.
-		Media entry = new Media(type,name,year);
 		allEntries.add(entry);
 		
 		System.out.println("Eintrag wurde angelegt!");
 		System.out.println("\n");
 	}
 
-	private MediaType askForMediaType() {
+	private String askForMediaType() {
 	    while (true) {
 
 	        System.out.println("Bitte geben Sie den Medientyp ein:");
@@ -101,16 +114,16 @@ public class MediaController {
 	        switch (input.toLowerCase()) {
 
 	            case "spiel":
-	                return MediaType.GAME;
-
+	                return "game";
+	                
 	            case "buch":
-	                return MediaType.BOOK;
-
+	                return "book";
+	                
 	            case "film":
-	                return MediaType.MOVIE;
+	                return "movie";
 
 	            case "serie":
-	                return MediaType.SERIES;
+	                return "series";
 
 	            default:
 	                System.out.println("Ungültiger Medientyp.");
@@ -120,7 +133,109 @@ public class MediaController {
 
 	}
 	
+	public String askName() {
+		System.out.println("Bitte geben Sie nun den Namen für den Eintrag ein.");
+		String name = in.nextLine();
+		return name;
+	}
 	
+	public int askYear() {
+		System.out.println("Bitte geben Sie nun das Jahr ein, ich welches das Medium abgeschlossen wurde!");
+		int year = in.nextInt();
+		in.nextLine();
+		return year;
+	}
+	
+	public Media addGame() {
+		String name = askName();
+		int year = askYear();
+		boolean completed =false;
+		System.out.println("Bitt geben geben Sie an, auf welcher Plattform das Spiel gespielt wurde:");
+		String platform = in.nextLine();
+
+		boolean validInput = false;
+		
+		while(!validInput) {
+	
+		System.out.println("\nHaben Sie das Spiel zu 100% durchgespielt?");
+		System.out.println("(Ja/Nein)");
+		String hundredPercent = in.nextLine();
+		switch(hundredPercent.toLowerCase()) {
+		case "ja":
+			completed = true;
+			validInput = true;
+			break;
+		case "nein":
+			completed =false;
+			validInput =true;
+			break;
+		default:
+			System.out.println("Ungültige Eingabe!");
+		}
+		}
+		
+
+		Media game = new Game(name,year,platform,completed);
+		return game;
+	}
+	
+	
+	public Media addBook() {
+		String name = askName();
+		int year = askYear();
+		boolean validInput = false;
+		boolean authorWanted =false;
+		String author;
+		Media book;
+		
+
+		while(!validInput) {
+			
+			System.out.println("\nMöchten Sie einen Autor angeben?");
+			System.out.println("(Ja/Nein)");
+			String yesOrNo = in.nextLine();
+			switch(yesOrNo.toLowerCase()) {
+			case "ja":
+				validInput = true;
+				authorWanted =true;
+				break;
+			case "nein":
+				validInput =true;
+				authorWanted=false;
+				break;
+			default:
+				System.out.println("Ungültige Eingabe!");
+			}
+			}
+		
+		if(authorWanted) {
+			System.out.println("\n Bitte geben Sie den Namen des Autors ein:");
+			author = in.nextLine();
+			 book = new Book(name,year,author);
+		}else {
+			 book = new Book(name,year);
+		}
+		
+		return book;
+
+	}
+	
+	
+	public Media addMovie() {
+		String name = askName();
+		int year = askYear();
+		
+		Media movie = new Movie(name,year);
+		return movie;
+	}
+	
+	public Media addSeries() {
+		String name = askName();
+		int year = askYear();
+		
+		Media series = new Series(name,year);
+		return series;
+	}
 	
 	// Removes a media entry from the collection by its name.
 	public void deleteMediaAction() {
@@ -152,17 +267,29 @@ public class MediaController {
 	
 	// Displays all stored media entries.
 	public void showAllEntriesAction() {
+		String type;
 		if(allEntries.isEmpty()) {
 			System.out.println("Noch kein Eintrag vorhanden!");
 		} 
 		
 		else {
-			System.out.println("Hier ist eine Liste aller Entries");
-			
+			System.out.println("Hier ist eine Liste aller Einträge");
 			// Print every stored media entry.
-			for(int i =0;i<allEntries.size();i++) {
-				System.out.println("Name: "+allEntries.get(i).getName() + "| Medium: "+allEntries.get(i).getType().getDisplayName()+" | Jahr: "+allEntries.get(i).getYear());
-				continue;
+			for(Media media : allEntries) {
+				if(media instanceof Game) {
+					Game game = (Game) media;
+					System.out.println("\n Typ:"+media.getClass().getSimpleName()+" | Name: "+media.getName()+" | Beendet in: "+ media.getYear()+" | Plattform: "+game.getPlatform()+" | 100%: "+game.getHundredPercentCompletion());
+				}
+				if(media instanceof Book) {
+					Book book = (Book) media;
+					System.out.println("\n Typ:"+media.getClass().getSimpleName()+" | Name: "+media.getName()+" | Beendet in: "+ media.getYear()+" | Author: " + book.getAuthor());
+				}
+				if(media instanceof Movie) {
+					System.out.println("\n Typ:"+media.getClass().getSimpleName()+" | Name: "+media.getName()+" | Beendet in: "+ media.getYear());
+				}
+				if(media instanceof Series) {
+					System.out.println("\n Typ:"+media.getClass().getSimpleName()+" | Name: "+media.getName()+" | Beendet in: "+ media.getYear());
+}
 			}
 		}
 }
