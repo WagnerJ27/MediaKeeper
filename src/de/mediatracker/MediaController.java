@@ -12,7 +12,7 @@ public class MediaController {
 	private final Scanner in = new Scanner(System.in);
 	
 	// Stores all created media entries during runtime.
-	private ArrayList<Media> allEntries= new ArrayList<Media>();
+	private ArrayList<Media> allEntries = new ArrayList<>();
 
 	private final FileManager fileManager = new FileManager();
 	// Determines whether the application should continue running.
@@ -34,7 +34,7 @@ public class MediaController {
 				deleteMediaAction();
 				break;
 			case 3:
-				whatToShow();
+				showEntriesAction();
 				break;
 			case 4:
 				endProgram();
@@ -333,65 +333,82 @@ public class MediaController {
 		
 		switch(input) {
 			case 1:
-				for(Media media : allEntries) {
-					if(media instanceof Game) {
-						Game game = (Game) media;
-						System.out.println("\n Typ:"+media.getClass().getSimpleName()+" | Name: "+media.getName()+" | Beendet in: "+ media.getYear()+" | Plattform: "+game.getPlatform()+" | 100%: "+game.getHundredPercentCompletion());
-					}
-					else if(media instanceof Book) {
-						Book book = (Book) media;
-						System.out.println("\n Typ:"+media.getClass().getSimpleName()+" | Name: "+media.getName()+" | Beendet in: "+ media.getYear()+" | Author: " + book.getAuthor());
-					}
-					else if(media instanceof Movie) {
-						System.out.println("\n Typ:"+media.getClass().getSimpleName()+" | Name: "+media.getName()+" | Beendet in: "+ media.getYear());
-					}
-					else if(media instanceof Series) {
-						System.out.println("\n Typ:"+media.getClass().getSimpleName()+" | Name: "+media.getName()+" | Beendet in: "+ media.getYear());
-					}
-				}
+				showAll();
 				break;
 		
 			case 2:
-				for(Media media : allEntries) {
-					if(media instanceof Game) {
-						Game game = (Game) media;
-						System.out.println("\n Typ:"+media.getClass().getSimpleName()+" | Name: "+media.getName()+" | Beendet in: "+ media.getYear()+" | Plattform: "+game.getPlatform()+" | 100%: "+game.getHundredPercentCompletion());
-					}
-				}
+				showGames();
 				break;
 				
 			case 3:
-				for(Media media : allEntries) {
-
-					if(media instanceof Book) {
-						Book book = (Book) media;
-						System.out.println("\n Typ:"+media.getClass().getSimpleName()+" | Name: "+media.getName()+" | Beendet in: "+ media.getYear()+" | Author: " + book.getAuthor());
-					}
-				}
+				showBooks();
 				break;
 				
 			case 4:
-				for(Media media : allEntries) {
-
-					if(media instanceof Movie) {
-						System.out.println("\n Typ:"+media.getClass().getSimpleName()+" | Name: "+media.getName()+" | Beendet in: "+ media.getYear());
-					}
-				}
+				showMovies();
 				break;
 				
 			case 5:
-				for(Media media : allEntries) {
-					if(media instanceof Series) {
-						System.out.println("\n Typ:"+media.getClass().getSimpleName()+" | Name: "+media.getName()+" | Beendet in: "+ media.getYear());
-					}
-				}
+				showSeries();
 				break;
 		}				
 	}
 	
+	public void showAll() {
+		for(Media media : allEntries) {
+			if(media instanceof Game) {
+				Game game = (Game) media;
+				System.out.println("\n Typ:"+media.getClass().getSimpleName()+" | Name: "+media.getName()+" | Beendet in: "+ media.getYear()+" | Plattform: "+game.getPlatform()+" | 100%: "+game.getHundredPercentCompletion());
+			}
+			else if(media instanceof Book) {
+				Book book = (Book) media;
+				System.out.println("\n Typ:"+media.getClass().getSimpleName()+" | Name: "+media.getName()+" | Beendet in: "+ media.getYear()+" | Author: " + book.getAuthor());
+			}
+			else if(media instanceof Movie) {
+				System.out.println("\n Typ:"+media.getClass().getSimpleName()+" | Name: "+media.getName()+" | Beendet in: "+ media.getYear());
+			}
+			else if(media instanceof Series) {
+				System.out.println("\n Typ:"+media.getClass().getSimpleName()+" | Name: "+media.getName()+" | Beendet in: "+ media.getYear());
+			}
+		}
+	}
+	public void showGames() {
+		for(Media media : allEntries) {
+			if(media instanceof Game) {
+				Game game = (Game) media;
+				System.out.println("\n Typ:"+media.getClass().getSimpleName()+" | Name: "+media.getName()+" | Beendet in: "+ media.getYear()+" | Plattform: "+game.getPlatform()+" | 100%: "+game.getHundredPercentCompletion());
+			}
+		}
+	}
+
+	public void showBooks() {
+		for(Media media : allEntries) {
+
+			if(media instanceof Book) {
+				Book book = (Book) media;
+				System.out.println("\n Typ:"+media.getClass().getSimpleName()+" | Name: "+media.getName()+" | Beendet in: "+ media.getYear()+" | Author: " + book.getAuthor());
+			}
+		}
+	}
 	
-	// Displays all stored media entries.
-	public void whatToShow() {
+	public void showMovies() {
+		for(Media media : allEntries) {
+
+			if(media instanceof Movie) {
+				System.out.println("\n Typ:"+media.getClass().getSimpleName()+" | Name: "+media.getName()+" | Beendet in: "+ media.getYear());
+			}
+		}
+	}
+	public void showSeries() {
+		for(Media media : allEntries) {
+			if(media instanceof Series) {
+				System.out.println("\n Typ:"+media.getClass().getSimpleName()+" | Name: "+media.getName()+" | Beendet in: "+ media.getYear());
+			}
+		}
+	}
+
+	
+	public void showEntriesAction() {
 		String type;
 		if(allEntries.isEmpty()) {
 			System.out.println("Noch kein Eintrag vorhanden!");
@@ -399,9 +416,7 @@ public class MediaController {
 		
 		else {
 			int input = askWhatToShow();
-			showEntries(input);
-
-			
+			showEntries(input);	
 
 		}
 }
