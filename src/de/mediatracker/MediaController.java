@@ -9,12 +9,12 @@ import java.util.Scanner;
 public class MediaController {
 	
 	// Scanner used to read user input from the console.
-	private Scanner in = new Scanner(System.in);
+	private final Scanner in = new Scanner(System.in);
 	
 	// Stores all created media entries during runtime.
 	private ArrayList<Media> allEntries= new ArrayList<Media>();
 
-	private FileManager fileManager = new FileManager();
+	private final FileManager fileManager = new FileManager();
 	// Determines whether the application should continue running.
 	private boolean exit = false;
 	
@@ -136,7 +136,7 @@ public class MediaController {
 
 	
 	public String askName() {
-		System.out.println("Bitte geben Sie nun den Namen für den Eintrag ein.");
+		System.out.println("Bitte geben Sie nun den Namen des den Eintrag ein.");
 		String name = in.nextLine();
 		return name;
 	}
@@ -285,30 +285,38 @@ public class MediaController {
 	
 	// Removes a media entry from the collection by its name.
 	public void deleteMediaAction() {
-		boolean entryFound = false;
-		
-		// Check whether there are any entries to delete.
 		if(allEntries.isEmpty()) {
 			System.out.println("Es sind noch keine Einträge vorhanden!");
-		}
-		
-		else {
-		System.out.println("Geben Sie bitte den Namen des Eintrags ein, den Sie entfernen möchten.");
-		String deleteName = in.nextLine();
-		
-			// Search for the requested entry.
-			for(int i =0;i<allEntries.size();i++) {
-				if(deleteName.equals(allEntries.get(i).getName())) {
-					allEntries.remove(i);
-					System.out.println("Das gewünschte Eintrag wurde gelöscht");
-					entryFound = true;
-				}
-
-			}						if(entryFound==false) {	
-				System.out.println("Es wurde leider kein Eintrag mit diesem Namen gefunden!");
-				}
+		}	else {
 			
+		System.out.println("Was für eine Art Eintrag möchten Sie entfernen?");
+		boolean entryFound = false;
+		String type = askForMediaType();
+		
+		System.out.println("Hier ist eine Liste mit allen \""+type + "\" Einträgen");
+		
+		for(Media media: allEntries) {
+			if(media.getClass().getSimpleName().toLowerCase().equals(type)) {
+				System.out.println("\n"+type+ " | "+media.getName());
+			}
 	}
+		
+		System.out.println("Geben Sie bitte nun den Namen des zu löschenden Eintrags an");
+		String deleteName = in.nextLine();
+			for(int i = 0; i<allEntries.size();i++) {
+				if(deleteName.equals(allEntries.get(i).getName()) && allEntries.get(i).getClass().getSimpleName().toLowerCase().equals(type)){
+					allEntries.remove(i);
+					System.out.println("Der gewünschte Eintrag wurde gelöscht");
+					entryFound = true;
+					break;
+				}
+			}
+			if(!entryFound) {
+				System.out.println("Es wurde kein Eintrag mit diesem Namen gefunden!");
+			}
+		}
+		// Check whether there are any entries to delete.
+
 }
 	
 	// Displays all stored media entries.
