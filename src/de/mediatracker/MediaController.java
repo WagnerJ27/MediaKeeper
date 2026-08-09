@@ -177,6 +177,29 @@ public class MediaController {
 		    return fixedName;
 		}
 	
+	public boolean askYesNo() {
+		boolean validInput = false;
+		boolean yesOrNo= false;
+		while(!validInput) {
+	
+		System.out.println("(Ja/Nein)");
+		String hundredPercent = in.nextLine();
+		switch(hundredPercent.toLowerCase()) {
+		case "ja":
+			yesOrNo = true;
+			validInput = true;
+			break;
+		case "nein":
+			yesOrNo =false;
+			validInput =true;
+			break;
+		default:
+			System.out.println("Ungültige Eingabe!");
+		}
+	}
+		return yesOrNo;
+	}
+		
 	public Media addGame() {
 		String name = askName();
 		String type = "Game";
@@ -189,26 +212,10 @@ public class MediaController {
 		System.out.println("Bitt geben geben Sie an, auf welcher Plattform das Spiel gespielt wurde:");
 		String platform = in.nextLine();
 
-		boolean validInput = false;
 		
-		while(!validInput) {
-	
+		
 		System.out.println("\nHaben Sie das Spiel zu 100% durchgespielt?");
-		System.out.println("(Ja/Nein)");
-		String hundredPercent = in.nextLine();
-		switch(hundredPercent.toLowerCase()) {
-		case "ja":
-			completed = true;
-			validInput = true;
-			break;
-		case "nein":
-			completed =false;
-			validInput =true;
-			break;
-		default:
-			System.out.println("Ungültige Eingabe!");
-		}
-		}
+		completed = askYesNo();
 		
 
 		Media game = new Game(fixedName,year,platform,completed);
@@ -229,27 +236,11 @@ public class MediaController {
 		Media book;
 		
 
-		while(!validInput) {
-			
 			System.out.println("\nMöchten Sie einen Autor angeben?");
-			System.out.println("(Ja/Nein)");
-			String yesOrNo = in.nextLine();
-			switch(yesOrNo.toLowerCase()) {
-			case "ja":
-				validInput = true;
-				authorWanted =true;
-				break;
-			case "nein":
-				validInput =true;
-				authorWanted=false;
-				break;
-			default:
-				System.out.println("Ungültige Eingabe!");
-			}
-			}
+			authorWanted = askYesNo();
 		
 		if(authorWanted) {
-			System.out.println("\n Bitte geben Sie den Namen des Autors ein:");
+			System.out.println("\nBitte geben Sie den Namen des Autors ein:");
 			author = in.nextLine();
 			 book = new Book(fixedName,year,author);
 		}else {
