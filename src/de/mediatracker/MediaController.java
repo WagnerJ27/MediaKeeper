@@ -133,6 +133,8 @@ public class MediaController {
 
 	}
 	
+
+	
 	public String askName() {
 		System.out.println("Bitte geben Sie nun den Namen für den Eintrag ein.");
 		String name = in.nextLine();
@@ -146,9 +148,43 @@ public class MediaController {
 		return year;
 	}
 	
+		public String checkIfNameExists(String name, String type) {
+		    String fixedName = name;
+	
+		    boolean nameExists;
+	
+		    do {
+		        nameExists = false;
+	
+		        for (Media media : allEntries) {
+		            if (media.getName().equals(fixedName)
+		                    && media.getClass().getSimpleName().equals(type)) {
+	
+		                System.out.println("Es gibt bereits einen "
+		                        + media.getClass().getSimpleName()
+		                        + " Eintrag mit diesem Namen.");
+	
+		                System.out.println("Bitte geben Sie einen anderen Namen für den Eintrag an.");
+	
+		                fixedName = in.nextLine();
+		                nameExists = true;
+		                break;
+		            }
+		        }
+	
+		    } while (nameExists);
+	
+		    return fixedName;
+		}
+	
 	public Media addGame() {
 		String name = askName();
+		String type = "Game";
+		
+		String fixedName = checkIfNameExists(name, type);
+		
 		int year = askYear();
+
 		boolean completed =false;
 		System.out.println("Bitt geben geben Sie an, auf welcher Plattform das Spiel gespielt wurde:");
 		String platform = in.nextLine();
@@ -175,13 +211,17 @@ public class MediaController {
 		}
 		
 
-		Media game = new Game(name,year,platform,completed);
+		Media game = new Game(fixedName,year,platform,completed);
 		return game;
 	}
 	
 	
 	public Media addBook() {
 		String name = askName();
+		String type = "Book";
+		
+		String fixedName = checkIfNameExists(name, type);
+		
 		int year = askYear();
 		boolean validInput = false;
 		boolean authorWanted =false;
@@ -211,9 +251,9 @@ public class MediaController {
 		if(authorWanted) {
 			System.out.println("\n Bitte geben Sie den Namen des Autors ein:");
 			author = in.nextLine();
-			 book = new Book(name,year,author);
+			 book = new Book(fixedName,year,author);
 		}else {
-			 book = new Book(name,year);
+			 book = new Book(fixedName,year);
 		}
 		
 		return book;
@@ -223,17 +263,23 @@ public class MediaController {
 	
 	public Media addMovie() {
 		String name = askName();
+		String type = "Movie";
+		
+		String fixedName = checkIfNameExists(name, type);
 		int year = askYear();
 		
-		Media movie = new Movie(name,year);
+		Media movie = new Movie(fixedName,year);
 		return movie;
 	}
 	
 	public Media addSeries() {
 		String name = askName();
+		String type = "Series";
+		
+		String fixedName = checkIfNameExists(name, type);
 		int year = askYear();
 		
-		Media series = new Series(name,year);
+		Media series = new Series(fixedName,year);
 		return series;
 	}
 	
