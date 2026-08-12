@@ -129,7 +129,12 @@ public class MediaKeeperGUI extends Application {
             System.out.println("Programm wird geschlossen!");
 
             // Close the application window.
-            stage.close();
+            try {
+                controller.saveMedia();
+                stage.close();
+            } catch (IOException e) {
+                
+            }
         });
 
 
@@ -412,6 +417,7 @@ public class MediaKeeperGUI extends Application {
         	String mediaT = mediaType.getValue(); 
         	String mediaName = nameField.getText();
         	String yearInput = yearField.getText();
+        	boolean nameExists = false;
         	//int mediaYear = Integer.parseInt(yearField.getText());
         	int mediaYear;
         	
@@ -425,6 +431,13 @@ public class MediaKeeperGUI extends Application {
         		mediaYear = Integer.parseInt(yearInput);
         	}catch (NumberFormatException e) {
         		showAddEntryError(stage,"Bitte geben Sie eine Zahl an!");
+        		return;
+        	}
+        	
+        	nameExists = controller.mediaExists(mediaName, mediaT);
+        	
+        	if(nameExists) {
+        		showAddEntryError(stage,"Es gibt bereits einen Eintrag mit diesem Namen!");
         		return;
         	}
         	

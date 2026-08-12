@@ -64,6 +64,38 @@ public class MediaController {
 		return series;
 	}
 	
+	
+	public boolean mediaExists(String name, String type) {
+		boolean exists =false;
+		String newType="";
+		
+		switch(type) {
+			case "Spiel":
+				newType = "Game";
+				break;
+				
+			case "Buch":
+				newType = "Book";
+				break;
+				
+			case "Film":
+				newType = "Movie";
+				break;
+				
+			case "Serie":
+				newType = "Series";
+				break;
+
+		}
+		
+		for(Media media : allEntries) {
+			if(media.getName().equals(name) && media.getClass().getSimpleName().equals(newType)) {
+				exists = true;
+			}
+		}
+		return exists;
+	}
+	
 	public void saveMedia()throws IOException {
 		    fileManager.saveMedia(allEntries);
 		    
