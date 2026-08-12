@@ -1,4 +1,5 @@
 package de.mediatracker;
+import javafx.application.Application;
 
 public class Main {
 	
@@ -8,10 +9,7 @@ public class Main {
 	public static void main(String[] args) {
 		
 		
-	    // Entry point of the application.
-	    // Creates the controller and starts the main program loop.
-		MediaController mainController = new MediaController();
-		
+		Application.launch(MediaKeeperGUI.class, args);
 											
 	}
 

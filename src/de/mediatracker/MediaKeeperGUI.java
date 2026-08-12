@@ -558,7 +558,4 @@ public class MediaKeeperGUI extends Application {
         entryErrorStage.show();
     }
     
-    public static void main(String[] args) {
-        launch();
-    }
 }
