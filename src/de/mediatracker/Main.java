@@ -11,7 +11,7 @@ public class Main {
 	    // Entry point of the application.
 	    // Creates the controller and starts the main program loop.
 		MediaController mainController = new MediaController();
-		mainController.programLoop();
+		
 											
 	}
 

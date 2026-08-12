@@ -23,13 +23,14 @@ import javafx.scene.control.TextField;
 public class MediaKeeperGUI extends Application {
 	private final MediaController controller = new MediaController();
     
+	private Scene mainScene;
      // Standard padding that can be reused throughout the GUI.     
     private final Insets padding = new Insets(20);
     
     //Padding used for elements that need a larger distance from the top, such as the title.
     private final Insets paddingTop = new Insets(50, 0, 0, 0);
 
-
+    private final Insets paddingBot = new Insets(0,0,50,0);
 
      //Main entry point of the JavaFX application.
 
@@ -38,7 +39,7 @@ public class MediaKeeperGUI extends Application {
 
         // Set the title of the application window.
         stage.setTitle("MediaKeeper");
-
+        controller.loadData();
 
 
          //BorderPane is the root container of the main scene.
@@ -145,12 +146,12 @@ public class MediaKeeperGUI extends Application {
 
         
         //Create the Scene using the root node.
-        Scene scene = new Scene(root, 800, 600);
+        mainScene = new Scene(root, 800, 600);
 
 
 
         //Set the Scene on the Stage.
-        stage.setScene(scene);
+        stage.setScene(mainScene);
 
 
         
@@ -166,7 +167,7 @@ public class MediaKeeperGUI extends Application {
         
         //Root node of the "Add Entry" Scene.
         BorderPane root = new BorderPane();
-
+        Button addEntry = new Button("Eintrag erstellen");
 
         
         //Title of the "Add Entry" Scene. 
@@ -237,7 +238,7 @@ public class MediaKeeperGUI extends Application {
         //Place the main form in the center area. 
         root.setCenter(form);
 
-
+        root.setBottom(addEntry);
         
         //ComboBox for selecting the media type.
         ComboBox<String> mediaType = new ComboBox<>();
@@ -313,7 +314,6 @@ public class MediaKeeperGUI extends Application {
         title.setPadding(paddingTop);
 
 
-        
         //Center the title inside the top BorderPane area.
          
         BorderPane.setAlignment(title, Pos.CENTER);
@@ -323,6 +323,7 @@ public class MediaKeeperGUI extends Application {
         //Center the form inside the center BorderPane area.        
         BorderPane.setAlignment(form, Pos.CENTER);
 
+        BorderPane.setAlignment(addEntry, Pos.CENTER);
 
         /*
          * Listener for changes to the selected media type.
@@ -404,7 +405,45 @@ public class MediaKeeperGUI extends Application {
             }
         });
 
-
+        addEntry.setOnAction(event -> {
+        	String mediaT = mediaType.getValue(); 
+        	String mediaName = nameField.getText();
+        	int mediaYear = Integer.parseInt(yearField.getText());
+        	Media media;
+        	switch(mediaT) {
+        		case "Spiel":
+        			String mediaPlatform = platformField.getText();
+        			boolean mediaCompleted = yesOrNo.getValue().equals("Ja");
+        			media = controller.addGame(mediaName, mediaYear, mediaPlatform, mediaCompleted);
+        			break;
+        			
+        		case "Buch":
+        			String mediaAuthor = authorField.getText();
+        			
+        				if(!mediaAuthor.isBlank()) {
+        					media = controller.addBook(mediaName, mediaYear, mediaAuthor);
+        				}else {
+        				media =	controller.addBook(mediaName, mediaYear);
+        				}
+        			break;
+        			
+        		case "Film":
+        			media = controller.addMovie(mediaName, mediaYear);
+        			break;
+        			
+        		case "Serie":
+        	
+        			media= controller.addSeries(mediaName, mediaYear);
+        			break;
+        			
+        		default:
+        			System.out.println("Fehlermeldung");
+        			return;
+        	}
+        	controller.addMedia(media);
+        	showSuccessMessage(stage);
+        });
+        
         
         //Create the Scene for adding a new media entry.
         Scene addEntryScene = new Scene(root, 800, 600);
@@ -422,6 +461,35 @@ public class MediaKeeperGUI extends Application {
      * launch() starts the JavaFX application and eventually
      * calls the start() method.
      */
+    
+    public void showSuccessMessage(Stage mainStage) {
+        Stage successStage = new Stage();
+        VBox content = new VBox();
+        successStage.setTitle("Eintrag erfolgreich angelegt!");
+
+        BorderPane root = new BorderPane();
+        Button ok = new Button("OK");
+        Label success = new Label("Eintrag wurde erfolgreich erstellt");
+
+        content.getChildren().add(success);
+        content.getChildren().add(ok);
+        
+        root.setCenter(content);
+        
+        ok.setOnAction(event ->{
+            successStage.close();
+            mainStage.setScene(mainScene);
+        });
+        
+        content.setAlignment(Pos.CENTER);
+        content.setSpacing(15);
+        
+        Scene scene = new Scene(root, 200, 200);
+        successStage.setScene(scene);
+
+        successStage.show();
+    }
+    
     public static void main(String[] args) {
         launch();
     }
