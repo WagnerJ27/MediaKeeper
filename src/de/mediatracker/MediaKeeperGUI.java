@@ -12,7 +12,7 @@ import javafx.geometry.Pos;
 import javafx.geometry.Insets;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
-
+import java.io.IOException;
 
 /*
  * Main class of the JavaFX GUI for MediaKeeper.
@@ -24,6 +24,9 @@ public class MediaKeeperGUI extends Application {
 	private final MediaController controller = new MediaController();
     
 	private Scene mainScene;
+	
+	private Scene addEntryScene;
+	
      // Standard padding that can be reused throughout the GUI.     
     private final Insets padding = new Insets(20);
     
@@ -408,12 +411,32 @@ public class MediaKeeperGUI extends Application {
         addEntry.setOnAction(event -> {
         	String mediaT = mediaType.getValue(); 
         	String mediaName = nameField.getText();
-        	int mediaYear = Integer.parseInt(yearField.getText());
+        	String yearInput = yearField.getText();
+        	//int mediaYear = Integer.parseInt(yearField.getText());
+        	int mediaYear;
+        	
+        
+        	if(mediaName.isBlank() || yearInput.isBlank()) {
+        		showAddEntryError(stage,"Bitte füllen Sie alle Pflichtfelder aus");
+        		return;
+        	} 
+        	
+        	try {
+        		mediaYear = Integer.parseInt(yearInput);
+        	}catch (NumberFormatException e) {
+        		showAddEntryError(stage,"Bitte geben Sie eine Zahl an!");
+        		return;
+        	}
+        	
         	Media media;
         	switch(mediaT) {
         		case "Spiel":
         			String mediaPlatform = platformField.getText();
         			boolean mediaCompleted = yesOrNo.getValue().equals("Ja");
+        			if(mediaPlatform.isBlank()) {
+        				showAddEntryError(stage,"Bitte geben Sie zusätzlich die Plattform an!");
+        				return;
+        			}
         			media = controller.addGame(mediaName, mediaYear, mediaPlatform, mediaCompleted);
         			break;
         			
@@ -441,12 +464,18 @@ public class MediaKeeperGUI extends Application {
         			return;
         	}
         	controller.addMedia(media);
-        	showSuccessMessage(stage);
+        	try {
+        	    controller.saveMedia();
+        	    showSuccessMessage(stage);
+        	} catch (IOException e) {
+        	    showAddEntryError(stage, "Fehler beim Speichern in der Datei!");
+        	    return;
+        	}
         });
         
         
         //Create the Scene for adding a new media entry.
-        Scene addEntryScene = new Scene(root, 800, 600);
+         addEntryScene = new Scene(root, 800, 600);
 
 
         
@@ -488,6 +517,32 @@ public class MediaKeeperGUI extends Application {
         successStage.setScene(scene);
 
         successStage.show();
+    }
+    public void showAddEntryError(Stage mainStage, String error) {
+        Stage entryErrorStage = new Stage();
+        VBox content = new VBox();
+
+        BorderPane root = new BorderPane();
+        Button ok = new Button("OK");
+        Label errorMessage = new Label(error);
+
+        content.getChildren().add(errorMessage);
+        content.getChildren().add(ok);
+        
+        root.setCenter(content);
+        
+        ok.setOnAction(event ->{
+            entryErrorStage.close();
+            mainStage.setScene(addEntryScene);
+        });
+        
+        content.setAlignment(Pos.CENTER);
+        content.setSpacing(15);
+        
+        Scene scene = new Scene(root, 200, 200);
+        entryErrorStage.setScene(scene);
+
+        entryErrorStage.show();
     }
     
     public static void main(String[] args) {

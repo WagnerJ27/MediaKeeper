@@ -6,7 +6,7 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
-
+import java.io.IOException;
 
 
 public class FileManager {
@@ -14,7 +14,7 @@ public class FileManager {
 	File saveFile = new File(OUTPUT_FILE);
 	File saveFolder = new File("Save");
 	
-	public void saveMedia(ArrayList<Media> allEntries) {
+	public void saveMedia(ArrayList<Media> allEntries) throws IOException{
 	
 		
 
@@ -53,11 +53,7 @@ public class FileManager {
 		 }
 		 
 
-	 }catch (IOException e) {
-		 System.out.println("Speichern fehlgeschlagen.");
-    	 e.printStackTrace();
-
-    }
+	 }
  }
  
 	public ArrayList<Media> loadMedia() {

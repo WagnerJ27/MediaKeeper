@@ -1,7 +1,7 @@
 package de.mediatracker;
 import java.util.ArrayList;
 import java.util.Scanner;
-
+import java.io.IOException;
 
 
 //Controls the complete application flow including user input,
@@ -64,7 +64,10 @@ public class MediaController {
 		return series;
 	}
 	
-
+	public void saveMedia()throws IOException {
+		    fileManager.saveMedia(allEntries);
+		    
+	}
 
 	
 
