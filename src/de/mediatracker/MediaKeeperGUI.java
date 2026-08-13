@@ -8,6 +8,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.geometry.Pos;
 import javafx.geometry.Insets;
 import javafx.scene.control.ComboBox;
@@ -245,5 +246,6 @@ public class MediaKeeperGUI extends Application {
     public void showMainScene(Stage stage) {
         stage.setScene(mainScene);
     }
+
     
 }

@@ -3,6 +3,7 @@ import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
+import javafx.scene.layout.HBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
@@ -113,8 +114,9 @@ public class ShowEntriesGUI {
     	
     	BorderPane root = new BorderPane();
     	Label title = new Label("Spiele");
-    	Button backToOverview = new Button("Zurück");
-    	
+    	HBox navigation = new HBox();
+    	Button backToOverview = new Button("Zurück zur Auswahl");
+    	Button backToStart = new Button("Zurück zur Startseite");
     	
     	TableView<Game> gameTable = new TableView<>();
     	
@@ -165,21 +167,31 @@ public class ShowEntriesGUI {
 
     	
     	backToOverview.setPrefWidth(mainGUI.buttonWidth);
+    	backToStart.setPrefWidth(mainGUI.buttonWidth);
+    	
+    	navigation.getChildren().add(backToStart);
+    	navigation.getChildren().add(backToOverview);
+    	navigation.setAlignment(Pos.CENTER);
+    	
     	root.setTop(title);
     	root.setCenter(gameTable);
-    	root.setBottom(backToOverview);
+    	root.setBottom(navigation);
     	
     	title.setPadding(paddingTop);
     	
     	BorderPane.setAlignment(title, Pos.CENTER);
     	BorderPane.setAlignment(gameTable, Pos.CENTER);
-    	BorderPane.setAlignment(backToOverview, Pos.CENTER);
+    	BorderPane.setAlignment(navigation, Pos.CENTER);
     	
     	Scene scene = new Scene(root,800,600);
     	stage.setScene(scene);
     	
     	backToOverview.setOnAction(event ->{
     		show(stage);
+    	});
+    	
+    	backToStart.setOnAction(event ->{
+    		mainGUI.showMainScene(stage);
     	});
     }
  
@@ -189,8 +201,9 @@ public class ShowEntriesGUI {
     	
     	BorderPane root = new BorderPane();
     	Label title = new Label("Bücher");
-    	Button backToOverview = new Button("Zurück");
-    	
+    	HBox navigation = new HBox();
+    	Button backToOverview = new Button("Zurück zur Auswahl");
+    	Button backToStart = new Button("Zurück zur Startseite");
     	
     	TableView<Book> bookTable = new TableView<>();
     	
@@ -216,21 +229,32 @@ public class ShowEntriesGUI {
     	
 	
     	backToOverview.setPrefWidth(mainGUI.buttonWidth);
+    	backToStart.setPrefWidth(mainGUI.buttonWidth);
+    	
+    	navigation.getChildren().add(backToStart);
+    	navigation.getChildren().add(backToOverview);
+    	
+    	navigation.setAlignment(Pos.CENTER);
+    	
     	root.setTop(title);
     	root.setCenter(bookTable);
-    	root.setBottom(backToOverview);
+    	root.setBottom(navigation);
     	
     	title.setPadding(paddingTop);
     	
     	BorderPane.setAlignment(title, Pos.CENTER);
     	BorderPane.setAlignment(bookTable, Pos.CENTER);
-    	BorderPane.setAlignment(backToOverview, Pos.CENTER);
+    	BorderPane.setAlignment(navigation, Pos.CENTER);
     	
     	Scene scene = new Scene(root,800,600);
     	stage.setScene(scene);
     	
     	backToOverview.setOnAction(event ->{
     		show(stage);
+    	});
+    	
+    	backToStart.setOnAction(event -> {
+    		mainGUI.showMainScene(stage);
     	});
     }
     
@@ -240,8 +264,9 @@ public class ShowEntriesGUI {
     	
     	BorderPane root = new BorderPane();
     	Label title = new Label("Filme");
-    	Button backToOverview = new Button("Zurück");
-    	
+    	HBox navigation = new HBox();
+    	Button backToOverview = new Button("Zurück zur Auswahl");
+    	Button backToStart = new Button("Zurück zur Startseite");
     	
     	TableView<Movie> movieTable = new TableView<>();
     	
@@ -262,15 +287,21 @@ public class ShowEntriesGUI {
     	
 	
     	backToOverview.setPrefWidth(mainGUI.buttonWidth);
+    	backToStart.setPrefWidth(mainGUI.buttonWidth);
+    	
+    	navigation.getChildren().add(backToStart);
+    	navigation.getChildren().add(backToOverview);
+    	navigation.setAlignment(Pos.CENTER);
+    	
     	root.setTop(title);
     	root.setCenter(movieTable);
-    	root.setBottom(backToOverview);
+    	root.setBottom(navigation);
     	
     	title.setPadding(paddingTop);
     	
     	BorderPane.setAlignment(title, Pos.CENTER);
     	BorderPane.setAlignment(movieTable, Pos.CENTER);
-    	BorderPane.setAlignment(backToOverview, Pos.CENTER);
+    	BorderPane.setAlignment(navigation, Pos.CENTER);
     	
     	Scene scene = new Scene(root,800,600);
     	stage.setScene(scene);
@@ -286,8 +317,9 @@ public class ShowEntriesGUI {
     	
     	BorderPane root = new BorderPane();
     	Label title = new Label("Serien");
-    	Button backToOverview = new Button("Zurück");
-    	
+    	HBox navigation = new HBox();
+    	Button backToOverview = new Button("Zurück zur Auswahl");
+    	Button backToStart = new Button("Zurück zur Startseite");
     	
     	TableView<Series> seriesTable = new TableView<>();
     	
@@ -308,21 +340,31 @@ public class ShowEntriesGUI {
     	
 	
     	backToOverview.setPrefWidth(mainGUI.buttonWidth);
+    	backToStart.setPrefWidth(mainGUI.buttonWidth);
+    	
+    	navigation.getChildren().add(backToStart);
+    	navigation.getChildren().add(backToOverview);
+    	navigation.setAlignment(Pos.CENTER);
+    	
     	root.setTop(title);
     	root.setCenter(seriesTable);
-    	root.setBottom(backToOverview);
+    	root.setBottom(navigation);
     	
     	title.setPadding(paddingTop);
     	
     	BorderPane.setAlignment(title, Pos.CENTER);
     	BorderPane.setAlignment(seriesTable, Pos.CENTER);
-    	BorderPane.setAlignment(backToOverview, Pos.CENTER);
+    	BorderPane.setAlignment(navigation, Pos.CENTER);
     	
     	Scene scene = new Scene(root,800,600);
     	stage.setScene(scene);
     	
     	backToOverview.setOnAction(event ->{
     		show(stage);
+    	});
+    
+    	backToStart.setOnAction(event ->{
+    		mainGUI.showMainScene(stage);
     	});
     }
 }
