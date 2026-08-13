@@ -127,6 +127,50 @@ public class MediaController {
 		return entryIsDeleted;
 	}
 	
+	
+	public ArrayList<Game> getGames(){
+		ArrayList<Game> gamesList = new ArrayList<>();
+			for(Media media : allEntries) {
+				if(media instanceof Game) {
+					Game game = (Game) media;
+					gamesList.add(game);
+				}
+			}
+			return gamesList;
+	}
+	
+	public ArrayList<Book> getBooks(){
+		ArrayList<Book> booksList = new ArrayList<>();
+		for(Media media : allEntries) {
+			if(media instanceof Book) {
+				Book book = (Book) media;
+				booksList.add(book);
+			}
+		}
+		return booksList;
+	}
+	
+	public ArrayList<Movie> getMovies(){
+		ArrayList<Movie> moviesList = new ArrayList<>();
+		for(Media media : allEntries) {
+			if(media instanceof Movie) {
+				Movie movie = (Movie) media;
+				moviesList.add(movie);
+			}
+		}
+		return moviesList;
+	}
+	public ArrayList<Series> getSeries(){
+		ArrayList<Series> seriesList = new ArrayList<>();
+		for(Media media : allEntries) {
+			if(media instanceof Series) {
+				Series series = (Series) media;
+				seriesList.add(series);
+			}
+		}
+		return seriesList;
+	}
+	
 	public void saveMedia()throws IOException {
 		    fileManager.saveMedia(allEntries);
 		    

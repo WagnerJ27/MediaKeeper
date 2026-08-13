@@ -35,6 +35,8 @@ public class MediaKeeperGUI extends Application {
     private final Insets paddingTop = new Insets(50, 0, 0, 0);
 
     private final Insets paddingBot = new Insets(0,0,50,0);
+    
+    double buttonWidth = 250;
 
      //Main entry point of the JavaFX application.
 
@@ -93,10 +95,10 @@ public class MediaKeeperGUI extends Application {
 
 
         //Set the preferred width of all buttons.
-        addEntry.setPrefWidth(250);
-        deleteEntry.setPrefWidth(250);
-        showEntries.setPrefWidth(250);
-        exitProgramm.setPrefWidth(250);
+        addEntry.setPrefWidth(buttonWidth);
+        deleteEntry.setPrefWidth(buttonWidth);
+        showEntries.setPrefWidth(buttonWidth);
+        exitProgramm.setPrefWidth(buttonWidth);
 
 
         
@@ -162,6 +164,10 @@ public class MediaKeeperGUI extends Application {
         mainScene = new Scene(root, 800, 600);
 
 
+        showEntries.setOnAction(event ->{
+        	ShowEntriesGUI showEntriesGUI = new ShowEntriesGUI(controller,this);
+        	showEntriesGUI.show(stage);
+        });
 
         //Set the Scene on the Stage.
         stage.setScene(mainScene);
@@ -235,6 +241,9 @@ public class MediaKeeperGUI extends Application {
         errorStage.setScene(scene);
 
         errorStage.show();
+    }
+    public void showMainScene(Stage stage) {
+        stage.setScene(mainScene);
     }
     
 }
