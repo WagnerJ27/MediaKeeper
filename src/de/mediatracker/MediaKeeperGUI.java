@@ -13,7 +13,7 @@ import javafx.geometry.Insets;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import java.io.IOException;
-
+import javafx.scene.Cursor;
 /*
  * Main class of the JavaFX GUI for MediaKeeper.
  *
@@ -26,6 +26,8 @@ public class MediaKeeperGUI extends Application {
 	private Scene mainScene;
 	
 	private Scene addEntryScene;
+	
+	private Scene deleteEntryScene;
 	
      // Standard padding that can be reused throughout the GUI.     
     private final Insets padding = new Insets(20);
@@ -151,6 +153,10 @@ public class MediaKeeperGUI extends Application {
             addEntryScene(stage);
         });
 
+        deleteEntry.setOnAction(event ->{
+        	System.out.println("Wird zum Löschen gewechselt!");
+        	deleteEntryScene(stage);
+        });
 
         
         //Create the Scene using the root node.
@@ -423,21 +429,21 @@ public class MediaKeeperGUI extends Application {
         	
         
         	if(mediaName.isBlank() || yearInput.isBlank()) {
-        		showAddEntryError(stage,"Bitte füllen Sie alle Pflichtfelder aus");
+        		showError(stage,"Bitte füllen Sie alle Pflichtfelder aus","addEntry");
         		return;
         	} 
         	
         	try {
         		mediaYear = Integer.parseInt(yearInput);
         	}catch (NumberFormatException e) {
-        		showAddEntryError(stage,"Bitte geben Sie eine Zahl an!");
+        		showError(stage,"Bitte geben Sie eine Zahl an!","addEntry");
         		return;
         	}
         	
         	nameExists = controller.mediaExists(mediaName, mediaT);
         	
         	if(nameExists) {
-        		showAddEntryError(stage,"Es gibt bereits einen Eintrag mit diesem Namen!");
+        		showError(stage,"Es gibt bereits einen Eintrag mit diesem Namen!","addEntry");
         		return;
         	}
         	
@@ -447,7 +453,7 @@ public class MediaKeeperGUI extends Application {
         			String mediaPlatform = platformField.getText();
         			boolean mediaCompleted = yesOrNo.getValue().equals("Ja");
         			if(mediaPlatform.isBlank()) {
-        				showAddEntryError(stage,"Bitte geben Sie zusätzlich die Plattform an!");
+        				showError(stage,"Bitte geben Sie zusätzlich die Plattform an!","addEntry");
         				return;
         			}
         			media = controller.addGame(mediaName, mediaYear, mediaPlatform, mediaCompleted);
@@ -479,9 +485,9 @@ public class MediaKeeperGUI extends Application {
         	controller.addMedia(media);
         	try {
         	    controller.saveMedia();
-        	    showSuccessMessage(stage);
+        	    showSuccessMessage(stage,"Eintrag wurde hinzugefügt");
         	} catch (IOException e) {
-        	    showAddEntryError(stage, "Fehler beim Speichern in der Datei!");
+        	    showError(stage, "Fehler beim Speichern in der Datei!","addEntry");
         	    return;
         	}
         });
@@ -497,30 +503,100 @@ public class MediaKeeperGUI extends Application {
     }
 
 
-    /*
-     * Main method of the Java application.
-     *
-     * launch() starts the JavaFX application and eventually
-     * calls the start() method.
-     */
     
-    public void showSuccessMessage(Stage mainStage) {
+    public void deleteEntryScene(Stage stage) {
+    	
+    	BorderPane root = new BorderPane();
+    	GridPane form = new GridPane();
+    	ComboBox<String> mediaType = new ComboBox<>();
+    	Button deleteEntry = new Button("Eintrag löschen");
+    	
+    	Label title = new Label("Eintrag löschen");
+    	Label typeLabel = new Label("Medientyp: "); 
+    	
+    	Label nameLabel = new Label("Name: ");
+    	TextField nameField = new TextField();
+    	
+    	mediaType.getItems().add("Spiel");
+    	mediaType.getItems().add("Buch");
+    	mediaType.getItems().add("Film");
+    	mediaType.getItems().add("Serie");
+
+    	mediaType.setValue("Spiel");
+    	
+    	form.add(typeLabel, 0, 0);
+    	form.add(mediaType, 1, 0);
+    	form.add(nameLabel, 0, 1);
+    	form.add(nameField, 1, 1);
+    	
+    	title.setPadding(paddingTop);
+    	
+    	
+        form.setHgap(20);
+        form.setVgap(15);
+        
+        form.setAlignment(Pos.CENTER);
+
+    	root.setTop(title);
+    	root.setCenter(form);
+    	root.setBottom(deleteEntry);
+    	BorderPane.setAlignment(form, Pos.CENTER);
+    	BorderPane.setAlignment(title, Pos.CENTER);
+    	BorderPane.setAlignment(deleteEntry, Pos.CENTER);
+    	
+    	
+    	
+    	deleteEntry.setOnAction(event ->{
+    		String inputName = nameField.getText();
+    		String inputType = mediaType.getValue();
+    			if(inputName.isBlank()) {
+    				showError(stage,"Bitte geben Sie einen Namen ein!","deleteEntry");
+    				
+    			}else {
+    				boolean wasDeleted = controller.deleteEntry(inputName, inputType);
+    					if(wasDeleted) {
+    						try {
+    							showSuccessMessage(stage, "Eintrag erfolgreich gelöscht");
+    							controller.saveMedia();
+    						}catch (IOException e){
+    			        	    showError(stage, "Fehler beim Speichern in der Datei!","deleteEntry");
+    			        	    return;
+    						}
+    						
+    						
+    					}else {
+    						showError(stage,"Kein passenden Eintrag gefunden","deleteEntry");
+    					}
+    				
+    			}
+    			
+    	});
+    	
+    	
+       deleteEntryScene = new Scene(root, 800, 600);
+               
+       stage.setScene(deleteEntryScene);
+    }
+    
+    
+    public void showSuccessMessage(Stage mainStage, String message) {
         Stage successStage = new Stage();
         VBox content = new VBox();
-        successStage.setTitle("Eintrag erfolgreich angelegt!");
+        successStage.setTitle("Aktion erfolgreich durchgeführt!");
 
         BorderPane root = new BorderPane();
         Button ok = new Button("OK");
-        Label success = new Label("Eintrag wurde erfolgreich erstellt");
+        Label success = new Label(message);
 
         content.getChildren().add(success);
         content.getChildren().add(ok);
         
         root.setCenter(content);
         
-        ok.setOnAction(event ->{
+        ok.setOnAction(event -> {
             successStage.close();
             mainStage.setScene(mainScene);
+            mainStage.getScene().setCursor(Cursor.DEFAULT);
         });
         
         content.setAlignment(Pos.CENTER);
@@ -531,31 +607,39 @@ public class MediaKeeperGUI extends Application {
 
         successStage.show();
     }
-    public void showAddEntryError(Stage mainStage, String error) {
-        Stage entryErrorStage = new Stage();
-        VBox content = new VBox();
 
-        BorderPane root = new BorderPane();
-        Button ok = new Button("OK");
-        Label errorMessage = new Label(error);
 
-        content.getChildren().add(errorMessage);
-        content.getChildren().add(ok);
-        
-        root.setCenter(content);
-        
-        ok.setOnAction(event ->{
-            entryErrorStage.close();
-            mainStage.setScene(addEntryScene);
-        });
-        
-        content.setAlignment(Pos.CENTER);
-        content.setSpacing(15);
-        
-        Scene scene = new Scene(root, 200, 200);
-        entryErrorStage.setScene(scene);
+    
+    public void showError(Stage mainStage, String error, String action) {
+    	 Stage errorStage = new Stage();
+         VBox content = new VBox();
+             
+         BorderPane root = new BorderPane();
+         Button ok = new Button("OK");
+         Label errorMessage = new Label(error);
 
-        entryErrorStage.show();
+         content.getChildren().add(errorMessage);
+         content.getChildren().add(ok);
+         
+         root.setCenter(content);
+         
+         ok.setOnAction(event ->{
+             errorStage.close();
+             if(action.equals("addEntry")) {
+            	 mainStage.setScene(addEntryScene);
+             }else if(action.equals("deleteEntry")) {
+            	 mainStage.setScene(deleteEntryScene);
+             }
+             
+         });
+         
+         content.setAlignment(Pos.CENTER);
+         content.setSpacing(15);
+         
+         Scene scene = new Scene(root, 200, 200);
+         errorStage.setScene(scene);
+
+         errorStage.show();
     }
     
 }

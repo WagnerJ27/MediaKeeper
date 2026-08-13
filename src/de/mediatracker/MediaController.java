@@ -96,6 +96,37 @@ public class MediaController {
 		return exists;
 	}
 	
+	public boolean deleteEntry(String name, String type) {
+		
+		boolean entryIsDeleted = false;
+		switch(type) {
+			case "Spiel":
+				type = "Game";
+				break;
+				
+			case "Buch":
+				type = "Book";
+				break;
+				
+			case "Film":
+				type = "Movie";
+				break;
+				
+			case "Serie":
+				type = "Series";
+				break;
+		}
+		
+		for(int i =0; i<allEntries.size();i++) {
+			if(allEntries.get(i).getName().equals(name) && allEntries.get(i).getClass().getSimpleName().equals(type)) {
+				allEntries.remove(i);
+				entryIsDeleted = true;
+				break;
+			}
+		}
+		return entryIsDeleted;
+	}
+	
 	public void saveMedia()throws IOException {
 		    fileManager.saveMedia(allEntries);
 		    
