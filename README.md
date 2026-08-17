@@ -1,15 +1,19 @@
-# MediaTracker
+# MediaKeeper
 
-A Java application to track completed movies, series, books and games.
+MediaKeeper ist eine JavaFX-Anwendung zur Verwaltung von abgeschlossenen Filmen,
+Serien, Büchern und Spielen.
 
-## Current Features
+## Funktionen
 
-- Project setup
+- Medien hinzufügen
+- Medien anzeigen
+- Medien löschen
+- Speicherung der Einträge
+- JavaFX-GUI
+- CSS-basiertes Styling
 
-## Planned Features
+## Technologien
 
-- Add media entries
-- Categorize media
-- Ratings
-- Save data
-- Graphical user interface
+- Java 
+- JavaFX 
+- Git / GitHub
