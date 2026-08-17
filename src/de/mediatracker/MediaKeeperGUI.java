@@ -109,7 +109,7 @@ public class MediaKeeperGUI extends Application {
         // Save all media and close the application when the exit button is clicked.
         exitProgramm.setOnAction(event -> {
 
-            System.out.println("Programm wird geschlossen!");
+
 
             try {
 
@@ -126,7 +126,6 @@ public class MediaKeeperGUI extends Application {
         // Open the GUI for creating a new media entry.
         addEntry.setOnAction(event -> {
 
-            System.out.println("Scene wird gewechselt!");
 
             AddEntryGUI addEntryGUI = new AddEntryGUI(controller, this);
             addEntryGUI.show(stage);

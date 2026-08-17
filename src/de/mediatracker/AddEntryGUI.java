@@ -217,7 +217,6 @@ public class AddEntryGUI {
                 default:
 
                     // Handle an unexpected media type.
-                    System.out.println("Es kam zu einem unerwarteten Fehler");
             }
         });
 
@@ -350,7 +349,7 @@ public class AddEntryGUI {
                 default:
 
                     // Handle an unexpected media type.
-                    System.out.println("Fehlermeldung");
+                   
                     return;
             }
 

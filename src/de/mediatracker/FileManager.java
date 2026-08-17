@@ -1,34 +1,77 @@
+
 package de.mediatracker;
 
 import java.util.ArrayList;
 import java.io.File;
-import java.io.FileReader;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
 public class FileManager {
 
-    // Path to the file used for storing all media entries.
-    private static final String OUTPUT_FILE = "Save/media.csv";
+    /*
+     * Determines the folder in which MediaKeeper stores its data.
+     *
+     * On Windows this will normally be:
+     *
+     * C:\Users\<Benutzer>\AppData\Local\MediaKeeper
+     *
+     * This keeps user data separate from the installed application.
+     */
+    private static final String APP_FOLDER = "MediaKeeper";
 
-    // File object representing the save file.
-    File saveFile = new File(OUTPUT_FILE);
+    // Name of the folder containing the save file.
+    private static final String SAVE_FOLDER = "Save";
 
-    // Folder containing the save file.
-    File saveFolder = new File("Save");
+    // Name of the file containing the media entries.
+    private static final String SAVE_FILE = "media.csv";
+
+    /*
+     * Complete path to the MediaKeeper application folder.
+     *
+     * user.home points to the current Windows user's home directory.
+     */
+    private static final File APP_DIRECTORY =
+        new File(
+            System.getProperty("user.home"),
+            "AppData" + File.separator + "Local"
+        );
+
+    /*
+     * Folder in which MediaKeeper stores its save data.
+     */
+    private static final File SAVE_DIRECTORY =
+        new File(APP_DIRECTORY, APP_FOLDER + File.separator + SAVE_FOLDER);
+
+    /*
+     * File containing all saved media entries.
+     */
+    private static final File SAVE_FILE_PATH =
+        new File(SAVE_DIRECTORY, SAVE_FILE);
+
 
     // Saves all media entries to the CSV file.
     public void saveMedia(ArrayList<Media> allEntries) throws IOException {
 
-        // Create the save folder if it does not exist yet.
-        if (!saveFolder.exists()) {
-            saveFolder.mkdir();
+        /*
+         * Create the complete save directory if it does not exist yet.
+         *
+         * mkdirs() creates all missing parent folders as well.
+         */
+        if (!SAVE_DIRECTORY.exists()) {
+            SAVE_DIRECTORY.mkdirs();
         }
 
-        // Open the save file for writing and close it automatically afterwards.
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(OUTPUT_FILE))) {
+        /*
+         * Open the save file for writing.
+         *
+         * try-with-resources automatically closes the writer afterwards.
+         */
+
+        try (BufferedWriter writer =
+                 new BufferedWriter(new FileWriter(SAVE_FILE_PATH))) {
 
             // Write every media entry to the file.
             for (Media media : allEntries) {
@@ -54,6 +97,7 @@ public class FileManager {
 
                         break;
 
+
                     case "Book":
 
                         Book book = (Book) media;
@@ -69,11 +113,15 @@ public class FileManager {
 
                         break;
 
+
                     case "Movie":
 
                     case "Series":
 
-                        // Movies and series only require the attributes defined in Media.
+                        /*
+                         * Movies and series only require the attributes
+                         * defined in the Media class.
+                         */
                         writer.write(
                             media.getClass().getSimpleName()
                             + ";" + media.getName()
@@ -84,36 +132,48 @@ public class FileManager {
 
                         break;
 
+
                     default:
 
-                        // Ignore media types that are not supported by the file format.
-                        System.out.println(
-                            "Unbekannter Medientyp konnte nicht gespeichert werden."
-                        );
-
+                        // Ignore unsupported media types.
                         break;
                 }
+        
             }
+        
         }
+        
     }
+
 
     // Loads all media entries from the save file.
     public ArrayList<Media> loadMedia() {
 
         ArrayList<Media> allEntries = new ArrayList<>();
 
-        // Only try to load the file if it already exists.
-        if (saveFile.exists()) {
+        /*
+         * Only try to load the file if it already exists.
+         *
+         * On the first application start there will not be a save file yet.
+         */
+        if (SAVE_FILE_PATH.exists()) {
 
             String line;
 
-            // Open the save file for reading and close it automatically afterwards.
-            try (BufferedReader reader = new BufferedReader(new FileReader(saveFile))) {
+            /*
+             * Open the save file for reading.
+             *
+             * try-with-resources automatically closes the reader.
+             */
+            try (BufferedReader reader =
+                     new BufferedReader(new FileReader(SAVE_FILE_PATH))) {
 
                 // Read the file line by line.
                 while ((line = reader.readLine()) != null) {
 
-                    // Split the CSV line into its individual values.
+                    /*
+                     * Split the CSV line into its individual values.
+                     */
                     String[] parts = line.split(";");
 
                     String type = parts[0];
@@ -122,14 +182,19 @@ public class FileManager {
 
                     Media obj;
 
-                    // Recreate the correct media object based on its stored type.
+
+                    /*
+                     * Recreate the correct media object based on
+                     * the stored media type.
+                     */
                     switch (type) {
 
                         case "Game":
 
                             year = Integer.parseInt(parts[2]);
 
-                            boolean completed = Boolean.valueOf(parts[4]);
+                            boolean completed =
+                                Boolean.valueOf(parts[4]);
 
                             obj = new Game(
                                 parts[1],
@@ -139,6 +204,7 @@ public class FileManager {
                             );
 
                             break;
+
 
                         case "Book":
 
@@ -152,6 +218,7 @@ public class FileManager {
 
                             break;
 
+
                         case "Movie":
 
                             year = Integer.parseInt(parts[2]);
@@ -162,6 +229,7 @@ public class FileManager {
                             );
 
                             break;
+
 
                         case "Series":
 
@@ -174,10 +242,13 @@ public class FileManager {
 
                             break;
 
+
                         default:
 
-                            // Ignore lines containing an unknown media type.
-                            System.out.println("Fehler beim Laden");
+                            // Ignore unknown media types.
+                            System.out.println(
+                                "Unbekannter Medientyp beim Laden."
+                            );
 
                             continue;
                     }
@@ -188,7 +259,6 @@ public class FileManager {
 
             } catch (IOException e) {
 
-                // Print the error if the file could not be read.
                 System.out.println("Laden fehlgeschlagen.");
                 e.printStackTrace();
             }
