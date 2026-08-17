@@ -33,8 +33,20 @@ public class AddEntryGUI {
 
         // Root node of the "Add Entry" Scene.
         BorderPane root = new BorderPane();
+        
         Button addEntry = new Button("Eintrag erstellen");
+        Button backToStart = new Button("Zurück zur Startseite");
+        
+        VBox navigation = new VBox();
 
+        navigation.setSpacing(20);
+        navigation.getChildren().add(addEntry);
+        navigation.getChildren().add(backToStart);
+        
+    	backToStart.setPrefWidth(mainGUI.buttonWidth);
+    	
+    	navigation.setAlignment(Pos.CENTER);
+    	
         // Title of the "Add Entry" Scene.
         Label title = new Label("Neuen Eintrag hinzufügen");
 
@@ -74,7 +86,7 @@ public class AddEntryGUI {
         // Place the main form in the center.
         root.setCenter(form);
 
-        root.setBottom(addEntry);
+        root.setBottom(navigation);
 
         // ---------- MEDIA TYPE ----------
 
@@ -130,7 +142,7 @@ public class AddEntryGUI {
 
         BorderPane.setAlignment(title, Pos.CENTER);
         BorderPane.setAlignment(form, Pos.CENTER);
-        BorderPane.setAlignment(addEntry, Pos.CENTER);
+        BorderPane.setAlignment(navigation, Pos.CENTER);
 
         // ---------- MEDIA TYPE LISTENER ----------
 
@@ -323,6 +335,11 @@ public class AddEntryGUI {
                 return;
             }
         });
+        
+        backToStart.setOnAction(event ->{
+        	mainGUI.showMainScene(stage);
+        });
+       
 
         // Create the Scene.
         addEntryScene = new Scene(root, 800, 600);

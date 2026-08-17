@@ -33,7 +33,20 @@ public void show(Stage stage) {
     	BorderPane root = new BorderPane();
     	GridPane form = new GridPane();
     	ComboBox<String> mediaType = new ComboBox<>();
+    	
+    	VBox navigation = new VBox();
     	Button deleteEntry = new Button("Eintrag löschen");
+    	Button backToStart = new Button("Zurück zur Startseite");
+    	
+        navigation.setSpacing(20);
+        navigation.getChildren().add(deleteEntry);
+        navigation.getChildren().add(backToStart);
+        
+    	backToStart.setPrefWidth(mainGUI.buttonWidth);
+    	
+    	navigation.setAlignment(Pos.CENTER);
+    	
+    	
     	
     	Label title = new Label("Eintrag löschen");
     	Label typeLabel = new Label("Medientyp: "); 
@@ -63,10 +76,10 @@ public void show(Stage stage) {
 
     	root.setTop(title);
     	root.setCenter(form);
-    	root.setBottom(deleteEntry);
+    	root.setBottom(navigation);
     	BorderPane.setAlignment(form, Pos.CENTER);
     	BorderPane.setAlignment(title, Pos.CENTER);
-    	BorderPane.setAlignment(deleteEntry, Pos.CENTER);
+    	BorderPane.setAlignment(navigation, Pos.CENTER);
     	
     	
     	
@@ -96,6 +109,9 @@ public void show(Stage stage) {
     			
     	});
     	
+        backToStart.setOnAction(event ->{
+        	mainGUI.showMainScene(stage);
+        });
     	
        deleteEntryScene = new Scene(root, 800, 600);
                

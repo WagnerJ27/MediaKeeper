@@ -309,6 +309,10 @@ public class ShowEntriesGUI {
     	backToOverview.setOnAction(event ->{
     		show(stage);
     	});
+    	
+    	backToStart.setOnAction(event ->{
+    		mainGUI.showMainScene(stage);
+    	});
     }
     
     private void showSeries(Stage stage) {
