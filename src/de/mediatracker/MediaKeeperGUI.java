@@ -11,7 +11,7 @@ import javafx.geometry.Pos;
 import javafx.geometry.Insets;
 import java.io.IOException;
 import javafx.scene.Cursor;
-
+import javafx.scene.image.Image;
 // Main JavaFX application class and entry point for the GUI.
 public class MediaKeeperGUI extends Application {
 
@@ -28,7 +28,7 @@ public class MediaKeeperGUI extends Application {
     private final Insets paddingTop = new Insets(50, 0, 0, 0);
 
     // Preferred width used for the main menu buttons.
-    double buttonWidth = 250;
+    double buttonWidth = 300;
 
 
     // Starts the JavaFX application and creates the main menu.
@@ -49,13 +49,18 @@ public class MediaKeeperGUI extends Application {
 
         // Create the title of the start screen.
         Label title = new Label("Willkommen bei MediaKeeper!");
-
+        title.getStyleClass().add("title");
+        
         // Create the buttons of the main menu.
         Button addEntry = new Button("Neuen Eintrag hinzufügen");
         Button deleteEntry = new Button("Einen Eintrag entfernen");
         Button showEntries = new Button("Einträge Anzeigen");
         Button exitProgramm = new Button("Speichern und Beenden");
 
+        addEntry.getStyleClass().add("menu-button");
+        deleteEntry.getStyleClass().add("menu-button");
+        showEntries.getStyleClass().add("menu-button");
+        exitProgramm.getStyleClass().add("menu-button");
 
         // Set the spacing between the menu buttons.
         buttonBox.setSpacing(15);
@@ -86,7 +91,7 @@ public class MediaKeeperGUI extends Application {
 
 
         // Apply padding to the title and button area.
-        title.setPadding(paddingTop);
+      //  title.setPadding(paddingTop);
         buttonBox.setPadding(paddingTop);
 
         // Apply padding to all menu buttons.
@@ -144,9 +149,15 @@ public class MediaKeeperGUI extends Application {
         });
 
 
-        // Create the main application scene.
         mainScene = new Scene(root, 800, 600);
+        mainScene.getStylesheets().add(
+            getClass().getResource("/style.css").toExternalForm()
+        );
+        Image icon = new Image(
+        	    getClass().getResourceAsStream("/mediakeeper.png")
+        	);
 
+        	stage.getIcons().add(icon);
         // Set the main scene on the application window.
         stage.setScene(mainScene);
 
@@ -158,36 +169,47 @@ public class MediaKeeperGUI extends Application {
     // Displays a message after an action has been completed successfully.
     public void showSuccessMessage(Stage mainStage, String message) {
 
+        // Create a separate window for the success message.
         Stage successStage = new Stage();
+
+        // Create the root container and content container.
+        BorderPane root = new BorderPane();
         VBox content = new VBox();
 
-        successStage.setTitle("Aktion erfolgreich durchgeführt!");
-
-        BorderPane root = new BorderPane();
-
-        Button ok = new Button("OK");
+        // Create the message and confirmation button.
         Label success = new Label(message);
+        Button ok = new Button("OK");
 
-        // Add the message and confirmation button to the dialog.
+        // Apply CSS classes.
+        root.getStyleClass().add("message-root");
+        success.getStyleClass().add("message-text");
+        ok.getStyleClass().add("message-button");
+
+        // Add the message and button to the content container.
         content.getChildren().addAll(success, ok);
 
-        root.setCenter(content);
-
-        // Close the dialog and return to the main scene.
-        ok.setOnAction(event -> {
-
-            successStage.close();
-            mainStage.setScene(mainScene);
-
-            // Reset the cursor after returning to the main scene.
-            mainStage.getScene().setCursor(Cursor.DEFAULT);
-        });
-
+        // Center the content and add spacing between the elements.
         content.setAlignment(Pos.CENTER);
         content.setSpacing(15);
 
-        Scene scene = new Scene(root, 200, 200);
+        // Place the content in the center of the window.
+        root.setCenter(content);
 
+        // Close the message window and return to the main scene.
+        ok.setOnAction(event -> {
+            successStage.close();
+            mainStage.setScene(mainScene);
+            mainStage.getScene().setCursor(Cursor.DEFAULT);
+        });
+
+        // Create the scene and load the stylesheet.
+        Scene scene = new Scene(root, 350, 200);
+        scene.getStylesheets().add(
+            getClass().getResource("/style.css").toExternalForm()
+        );
+
+        // Set the window title and display the window.
+        successStage.setTitle("Aktion erfolgreich");
         successStage.setScene(scene);
         successStage.show();
     }
@@ -196,31 +218,46 @@ public class MediaKeeperGUI extends Application {
     // Displays an error message and returns to the specified scene.
     public void showError(Stage mainStage, String error, Scene returnScene) {
 
+        // Create a separate window for the error message.
         Stage errorStage = new Stage();
+
+        // Create the root container and content container.
+        BorderPane root = new BorderPane();
         VBox content = new VBox();
 
-        BorderPane root = new BorderPane();
-
-        Button ok = new Button("OK");
+        // Create the error message and confirmation button.
         Label errorMessage = new Label(error);
+        Button ok = new Button("OK");
 
-        // Add the error message and confirmation button to the dialog.
+        // Apply CSS classes.
+        root.getStyleClass().add("message-root");
+        errorMessage.getStyleClass().add("message-text");
+        ok.getStyleClass().add("message-button");
+
+        // Add the message and button to the content container.
         content.getChildren().addAll(errorMessage, ok);
 
+        // Center the content and add spacing between the elements.
+        content.setAlignment(Pos.CENTER);
+        content.setSpacing(15);
+
+        // Place the content in the center of the window.
         root.setCenter(content);
 
-        // Close the dialog and return to the previous scene.
+        // Close the error window and return to the previous scene.
         ok.setOnAction(event -> {
-
             errorStage.close();
             mainStage.setScene(returnScene);
         });
 
-        content.setAlignment(Pos.CENTER);
-        content.setSpacing(15);
+        // Create the scene and load the stylesheet.
+        Scene scene = new Scene(root, 350, 200);
+        scene.getStylesheets().add(
+            getClass().getResource("/style.css").toExternalForm()
+        );
 
-        Scene scene = new Scene(root, 200, 200);
-
+        // Set the window title and display the window.
+        errorStage.setTitle("Fehler");
         errorStage.setScene(scene);
         errorStage.show();
     }

@@ -59,11 +59,8 @@ public class AddEntryGUI {
         // Title of the "Add Entry" scene.
         Label title = new Label("Neuen Eintrag hinzufügen");
 
-        // Main GridPane containing the general input fields.
+        // Main GridPane containing all input fields.
         GridPane form = new GridPane();
-
-        // GridPane containing fields that depend on the selected media type.
-        GridPane dynamicFields = new GridPane();
 
         // ---------- GAME FIELDS ----------
 
@@ -84,15 +81,6 @@ public class AddEntryGUI {
 
         Label author = new Label("Autor: ");
         TextField authorField = new TextField();
-
-        // Place the title in the top area.
-        root.setTop(title);
-
-        // Place the main form in the center.
-        root.setCenter(form);
-
-        // Place the navigation buttons at the bottom.
-        root.setBottom(navigation);
 
         // ---------- MEDIA TYPE ----------
 
@@ -116,33 +104,58 @@ public class AddEntryGUI {
         TextField nameField = new TextField();
         TextField yearField = new TextField();
 
-        // Add the general input fields to the form.
+        // Apply CSS classes to the scene elements.
+        title.getStyleClass().add("smalltitle");
+
+        addEntry.getStyleClass().add("small-button");
+        backToStart.getStyleClass().add("small-button");
+
+        nameField.getStyleClass().add("input-field");
+        yearField.getStyleClass().add("input-field");
+        platformField.getStyleClass().add("input-field");
+        authorField.getStyleClass().add("input-field");
+
+        mediaType.getStyleClass().add("input-field");
+        yesOrNo.getStyleClass().add("input-field");
+
+        type.getStyleClass().add("form-label");
+        name.getStyleClass().add("form-label");
+        year.getStyleClass().add("form-label");
+        platform.getStyleClass().add("form-label");
+        completion.getStyleClass().add("form-label");
+        author.getStyleClass().add("form-label");
+
+        // Place the title in the top area.
+        root.setTop(title);
+
+        // Place the form in the center.
+        root.setCenter(form);
+
+        // Place the navigation buttons at the bottom.
+        root.setBottom(navigation);
+
+        // ---------- FORM FIELDS ----------
+
+        // Add the general fields to the form.
         form.add(type, 0, 0);
         form.add(mediaType, 1, 0);
 
         form.add(name, 0, 1);
-        form.add(year, 0, 2);
-
         form.add(nameField, 1, 1);
+
+        form.add(year, 0, 2);
         form.add(yearField, 1, 2);
+
+        // Add the game-specific fields initially.
+        form.add(platform, 0, 3);
+        form.add(platformField, 1, 3);
+
+        form.add(completion, 0, 4);
+        form.add(yesOrNo, 1, 4);
 
         // Set horizontal and vertical spacing between form elements.
         form.setHgap(20);
         form.setVgap(15);
-
-        // Set spacing between dynamic fields.
-        dynamicFields.setHgap(20);
-        dynamicFields.setVgap(15);
-
-        // Initially display the fields required for a game.
-        dynamicFields.add(platform, 0, 0);
-        dynamicFields.add(platformField, 1, 0);
-
-        dynamicFields.add(completion, 0, 1);
-        dynamicFields.add(yesOrNo, 1, 1);
-
-        // Add the dynamic fields to the main form.
-        form.add(dynamicFields, 0, 3, 2, 1);
 
         // Center the form.
         form.setAlignment(Pos.CENTER);
@@ -160,45 +173,45 @@ public class AddEntryGUI {
         // Update the displayed fields whenever the selected media type changes.
         mediaType.valueProperty().addListener((observable, oldValue, newValue) -> {
 
+            // Remove all media-specific fields before adding the required ones.
+            form.getChildren().removeAll(
+                platform,
+                platformField,
+                completion,
+                yesOrNo,
+                author,
+                authorField
+            );
+
             switch (newValue) {
 
                 case "Spiel":
 
-                    // Remove the fields of the previously selected media type.
-                    dynamicFields.getChildren().clear();
-
                     // Add the fields required for games.
-                    dynamicFields.add(platform, 0, 0);
-                    dynamicFields.add(platformField, 1, 0);
+                    form.add(platform, 0, 3);
+                    form.add(platformField, 1, 3);
 
-                    dynamicFields.add(completion, 0, 1);
-                    dynamicFields.add(yesOrNo, 1, 1);
+                    form.add(completion, 0, 4);
+                    form.add(yesOrNo, 1, 4);
 
                     break;
 
                 case "Buch":
 
-                    // Remove the fields of the previously selected media type.
-                    dynamicFields.getChildren().clear();
-
-                    // Add the fields required for books.
-                    dynamicFields.add(author, 0, 0);
-                    dynamicFields.add(authorField, 1, 0);
+                    // Add the field required for books.
+                    form.add(author, 0, 3);
+                    form.add(authorField, 1, 3);
 
                     break;
 
                 case "Film":
 
                     // Movies do not require additional fields.
-                    dynamicFields.getChildren().clear();
-
                     break;
 
                 case "Serie":
 
                     // Series do not require additional fields.
-                    dynamicFields.getChildren().clear();
-
                     break;
 
                 default:
@@ -375,6 +388,11 @@ public class AddEntryGUI {
 
         // Create the scene.
         addEntryScene = new Scene(root, 800, 600);
+
+        // Load the application stylesheet.
+        addEntryScene.getStylesheets().add(
+            getClass().getResource("/style.css").toExternalForm()
+        );
 
         // Display the scene.
         stage.setScene(addEntryScene);
