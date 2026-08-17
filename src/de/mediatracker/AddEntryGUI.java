@@ -1,4 +1,5 @@
 package de.mediatracker;
+
 import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
@@ -13,52 +14,55 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import java.io.IOException;
 import javafx.scene.Cursor;
-	
+
 public class AddEntryGUI {
 
+    // Controller used to create, check and save media entries.
     private final MediaController controller;
+
+    // Reference to the main GUI for navigation and displaying messages.
     private final MediaKeeperGUI mainGUI;
 
+    // Standard padding used for GUI elements.
     private final Insets padding = new Insets(20);
+
+    // Padding used for titles at the top of a scene.
     private final Insets paddingTop = new Insets(50, 0, 0, 0);
 
+    // Scene used for creating a new media entry.
     private Scene addEntryScene;
 
     public AddEntryGUI(MediaController controller, MediaKeeperGUI mainGUI) {
         this.controller = controller;
         this.mainGUI = mainGUI;
     }
-	
+
     public void show(Stage stage) {
 
-        // Root node of the "Add Entry" Scene.
+        // Root node of the "Add Entry" scene.
         BorderPane root = new BorderPane();
-        
+
         Button addEntry = new Button("Eintrag erstellen");
         Button backToStart = new Button("Zurück zur Startseite");
-        
+
+        // Contains the buttons used for navigating within the scene.
         VBox navigation = new VBox();
 
         navigation.setSpacing(20);
         navigation.getChildren().add(addEntry);
         navigation.getChildren().add(backToStart);
-        
-    	backToStart.setPrefWidth(mainGUI.buttonWidth);
-    	
-    	navigation.setAlignment(Pos.CENTER);
-    	
-        // Title of the "Add Entry" Scene.
+
+        backToStart.setPrefWidth(mainGUI.buttonWidth);
+
+        navigation.setAlignment(Pos.CENTER);
+
+        // Title of the "Add Entry" scene.
         Label title = new Label("Neuen Eintrag hinzufügen");
 
-        /*
-         * Main GridPane containing the general input fields.
-         */
+        // Main GridPane containing the general input fields.
         GridPane form = new GridPane();
 
-        /*
-         * Separate GridPane for fields that depend on the
-         * selected media type.
-         */
+        // GridPane containing fields that depend on the selected media type.
         GridPane dynamicFields = new GridPane();
 
         // ---------- GAME FIELDS ----------
@@ -68,6 +72,7 @@ public class AddEntryGUI {
 
         TextField platformField = new TextField();
 
+        // ComboBox used to select whether the game was completed 100%.
         ComboBox<String> yesOrNo = new ComboBox<>();
 
         yesOrNo.getItems().add("Ja");
@@ -86,10 +91,12 @@ public class AddEntryGUI {
         // Place the main form in the center.
         root.setCenter(form);
 
+        // Place the navigation buttons at the bottom.
         root.setBottom(navigation);
 
         // ---------- MEDIA TYPE ----------
 
+        // ComboBox used to select the type of media being created.
         ComboBox<String> mediaType = new ComboBox<>();
 
         mediaType.getItems().add("Spiel");
@@ -97,6 +104,7 @@ public class AddEntryGUI {
         mediaType.getItems().add("Film");
         mediaType.getItems().add("Serie");
 
+        // Select games as the default media type.
         mediaType.setValue("Spiel");
 
         // ---------- GENERAL FIELDS ----------
@@ -108,7 +116,7 @@ public class AddEntryGUI {
         TextField nameField = new TextField();
         TextField yearField = new TextField();
 
-        // Add the general fields to the main GridPane.
+        // Add the general input fields to the form.
         form.add(type, 0, 0);
         form.add(mediaType, 1, 0);
 
@@ -118,42 +126,48 @@ public class AddEntryGUI {
         form.add(nameField, 1, 1);
         form.add(yearField, 1, 2);
 
-        // Set spacing.
+        // Set horizontal and vertical spacing between form elements.
         form.setHgap(20);
         form.setVgap(15);
 
+        // Set spacing between dynamic fields.
         dynamicFields.setHgap(20);
         dynamicFields.setVgap(15);
 
-        // Initially display the fields for a game.
+        // Initially display the fields required for a game.
         dynamicFields.add(platform, 0, 0);
         dynamicFields.add(platformField, 1, 0);
 
         dynamicFields.add(completion, 0, 1);
         dynamicFields.add(yesOrNo, 1, 1);
 
-        // Add dynamic fields to the form.
+        // Add the dynamic fields to the main form.
         form.add(dynamicFields, 0, 3, 2, 1);
 
         // Center the form.
         form.setAlignment(Pos.CENTER);
 
+        // Add space above the title.
         title.setPadding(paddingTop);
 
+        // Center the elements inside their BorderPane areas.
         BorderPane.setAlignment(title, Pos.CENTER);
         BorderPane.setAlignment(form, Pos.CENTER);
         BorderPane.setAlignment(navigation, Pos.CENTER);
 
         // ---------- MEDIA TYPE LISTENER ----------
 
+        // Update the displayed fields whenever the selected media type changes.
         mediaType.valueProperty().addListener((observable, oldValue, newValue) -> {
 
             switch (newValue) {
 
                 case "Spiel":
 
+                    // Remove the fields of the previously selected media type.
                     dynamicFields.getChildren().clear();
 
+                    // Add the fields required for games.
                     dynamicFields.add(platform, 0, 0);
                     dynamicFields.add(platformField, 1, 0);
 
@@ -164,8 +178,10 @@ public class AddEntryGUI {
 
                 case "Buch":
 
+                    // Remove the fields of the previously selected media type.
                     dynamicFields.getChildren().clear();
 
+                    // Add the fields required for books.
                     dynamicFields.add(author, 0, 0);
                     dynamicFields.add(authorField, 1, 0);
 
@@ -173,24 +189,28 @@ public class AddEntryGUI {
 
                 case "Film":
 
+                    // Movies do not require additional fields.
                     dynamicFields.getChildren().clear();
 
                     break;
 
                 case "Serie":
 
+                    // Series do not require additional fields.
                     dynamicFields.getChildren().clear();
 
                     break;
 
                 default:
 
+                    // Handle an unexpected media type.
                     System.out.println("Es kam zu einem unerwarteten Fehler");
             }
         });
 
         // ---------- ADD ENTRY BUTTON ----------
 
+        // Validate the input, create the media object and save it.
         addEntry.setOnAction(event -> {
 
             String mediaT = mediaType.getValue();
@@ -199,6 +219,7 @@ public class AddEntryGUI {
 
             int mediaYear;
 
+            // Check whether all required fields have been filled in.
             if (mediaName.isBlank() || yearInput.isBlank()) {
 
                 mainGUI.showError(
@@ -210,12 +231,14 @@ public class AddEntryGUI {
                 return;
             }
 
+            // Convert the entered year from String to int.
             try {
 
                 mediaYear = Integer.parseInt(yearInput);
 
             } catch (NumberFormatException e) {
 
+                // Show an error if the entered year is not a valid number.
                 mainGUI.showError(
                     stage,
                     "Bitte geben Sie eine Zahl an!",
@@ -225,6 +248,7 @@ public class AddEntryGUI {
                 return;
             }
 
+            // Check whether an entry with the same name and media type already exists.
             boolean nameExists = controller.mediaExists(mediaName, mediaT);
 
             if (nameExists) {
@@ -240,6 +264,7 @@ public class AddEntryGUI {
 
             Media media;
 
+            // Create the appropriate media object based on the selected type.
             switch (mediaT) {
 
                 case "Spiel":
@@ -247,6 +272,7 @@ public class AddEntryGUI {
                     String mediaPlatform = platformField.getText();
                     boolean mediaCompleted = yesOrNo.getValue().equals("Ja");
 
+                    // A platform is required for games.
                     if (mediaPlatform.isBlank()) {
 
                         mainGUI.showError(
@@ -271,6 +297,7 @@ public class AddEntryGUI {
 
                     String mediaAuthor = authorField.getText();
 
+                    // Create a book with or without an author.
                     if (!mediaAuthor.isBlank()) {
 
                         media = controller.addBook(
@@ -309,16 +336,20 @@ public class AddEntryGUI {
 
                 default:
 
+                    // Handle an unexpected media type.
                     System.out.println("Fehlermeldung");
                     return;
             }
 
+            // Add the newly created media object to the controller.
             controller.addMedia(media);
 
+            // Save the updated media list to the CSV file.
             try {
 
                 controller.saveMedia();
 
+                // Show a success message after the entry was saved successfully.
                 mainGUI.showSuccessMessage(
                     stage,
                     "Eintrag wurde hinzugefügt"
@@ -326,6 +357,7 @@ public class AddEntryGUI {
 
             } catch (IOException e) {
 
+                // Show an error if saving the entry failed.
                 mainGUI.showError(
                     stage,
                     "Fehler beim Speichern in der Datei!",
@@ -335,16 +367,16 @@ public class AddEntryGUI {
                 return;
             }
         });
-        
-        backToStart.setOnAction(event ->{
-        	mainGUI.showMainScene(stage);
-        });
-       
 
-        // Create the Scene.
+        // Return to the main menu without creating an entry.
+        backToStart.setOnAction(event -> {
+            mainGUI.showMainScene(stage);
+        });
+
+        // Create the scene.
         addEntryScene = new Scene(root, 800, 600);
 
-        // Display the Scene.
+        // Display the scene.
         stage.setScene(addEntryScene);
     }
 }
