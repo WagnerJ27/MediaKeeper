@@ -1,1 +1,13 @@
 /bin/
+/release/
+*.class
+*.jar
+*.log
+*.tmp
+.DS_Store
+Thumbs.db
+
+# Eclipse
+.settings/
+.classpath
+.project
