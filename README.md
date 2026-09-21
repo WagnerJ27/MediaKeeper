@@ -4,6 +4,18 @@ MediaKeeper ist eine JavaFX-Anwendung zur Verwaltung und Organisation einer pers
 
 Das Projekt wurde als Java-Anwendung mit einer grafischen Benutzeroberfläche umgesetzt. Die Mediendaten werden lokal gespeichert, sodass die Einträge beim nächsten Start der Anwendung wieder geladen werden können.
 
+Das Projekt ist nicht abgeschlossen, und wird in Zukunft noch weiter entwickelt. Die erste 1.0 Version mit den Grundlegenden Funktionen ist abgeschlossen.
+
+## Screenshots
+
+![Screenshot 1](screenshots/mainscreen.png)
+
+![Screenshot 2](screenshots/addEntry.png)
+
+![Screenshot 3](screenshots/showEntries.png)
+
+
+
 ## Funktionen
 
 ### Medien verwalten
